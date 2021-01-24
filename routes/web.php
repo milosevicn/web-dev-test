@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PostsController;
@@ -34,3 +35,5 @@ Route::get('/posts', [FrontendController::class, 'posts'])->name('posts');
 Route::get('/posts/{id}', [FrontendController::class, 'postShow'])->name('post.show');
 Route::get('/news', [FrontendController::class, 'news'])->name('news');
 Route::get('/news/{id}', [FrontendController::class, 'newsShow'])->name('news.show');
+
+Route::post('comment/{postId}', [CommentController::class, 'store'])->name('comment.store');

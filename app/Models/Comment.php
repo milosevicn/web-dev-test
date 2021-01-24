@@ -11,6 +11,18 @@ class Comment extends Model
 
     protected $fillable = ['post_id', 'name', 'email', 'comment', 'approved'];
 
+    public function children() {
+        return $this->hasMany(Comment::class, 'parent_id', 'id');
+    }
+
+    public function parent() {
+        return $this->belongsTo(Comment::class, 'parent_id', 'id');
+    }
+
+    public function getParentNameAttribute() {
+        return $this->parent->name;
+    }
+
     public function post()
     {
         return $this->belongsTo(Post::class);
@@ -19,5 +31,12 @@ class Comment extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getLatestParent()
+    {
+        if ($this->parent)
+            return $this->parent->getLatestParent();
+        return $this->id;
     }
 }

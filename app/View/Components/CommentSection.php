@@ -40,7 +40,7 @@ class CommentSection extends Component
             }
             return $result;
         };
-        $comments = Comment::whereNull('parent_id')->with('children')->orderBy('created_at', 'desc');
+        $comments = Comment::where('approved', 1)->whereNull('parent_id')->with('children')->orderBy('created_at', 'desc');
         if($this->type == 'post') {
             $comments = $comments->where('post_id', $this->blogId);
         } else {

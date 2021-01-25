@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mailers\AppMailer;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,9 +18,19 @@ class CommentController extends Controller
 
     public function approve(Request $request)
     {
+        $app_mailer = app(AppMailer::class);
+
         $comment = Comment::find($request->id);
         $comment->approved = 1;
         $comment->save();
+
+        $article = $comment->post ?: $comment->news;
+        $app_mailer->sendTo($comment->email, 'New Comment', 'emails.new_comment', ['entity' => $comment, 'title' => $article->title, 'name' => $article->author->name]);
+        $app_mailer->sendTo($comment->email, 'Comment Approved', 'emails.approved_comment', ['title' => $article->title, 'name' => $comment->name]);
+        if($comment->parent_id) {
+            $parent_comment = Comment::find($comment->parent_id);
+            $app_mailer->sendTo($parent_comment->email, 'New Reply', 'emails.reply', ['title' => $article->title, 'name' => $parent_comment->name]);
+        }
 
         return $this->index();
     }

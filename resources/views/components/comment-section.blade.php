@@ -1,5 +1,5 @@
 <div class="relative mt-6 prose prose-indigo prose-lg text-gray-500 mx-auto" x-data="{ reply_text: 'Comment', parent_comment_id: 0}">
-    <form action="{{ route('comment.store', $postId) }}" method="POST" class="space-y-8">
+    <form action="{{ route('comment.store', ['blogId' => $blogId, 'type' => $type, 'id' => isset($comment) ? $comment->id : '' ]) }}" method="POST" class="space-y-8">
         @csrf
         <div class="space-y-8 divide-y divide-gray-200">
             <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
@@ -66,13 +66,13 @@
         <div class="pt-5">
             <div class="flex justify-end">
                 <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Post Comment
+                    Save comment
                 </button>
             </div>
         </div>
     </form>
 
-    @if (!empty($comments))
+    @if (!empty($comments) && !isset($comment))
     <div class="my-3 p-3 bg-white rounded shadow-sm">
         <h3 class="border-bottom pb-2 mb-0">Comments:</h3>
 

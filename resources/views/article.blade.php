@@ -39,6 +39,7 @@
                 <p>{!! nl2br(e($article->content)) !!}</p>
             </div>
         </div>
+        <x-comment-section :blogId="$article->id" type="news" />
     </div>
 
 </x-guest-layout>

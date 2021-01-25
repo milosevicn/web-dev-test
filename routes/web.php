@@ -26,6 +26,13 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
         Route::post('store/{id?}', [NewsController::class, 'store'])->name('news.store');
         Route::delete('destroy/{id?}', [NewsController::class, 'destroy'])->name('news.destroy');
     });
+
+    Route::prefix('comments')->group(function () {
+        Route::get('', [CommentController::class, 'index'])->name('comments.index');
+        Route::get('approve/{id}', [CommentController::class, 'approve'])->name('comments.approve');
+        Route::get('edit/{id}', [CommentController::class, 'edit'])->name('comments.edit');
+        Route::delete('destroy/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    });
 });
 
 require __DIR__.'/auth.php';
@@ -36,4 +43,4 @@ Route::get('/posts/{id}', [FrontendController::class, 'postShow'])->name('post.s
 Route::get('/news', [FrontendController::class, 'news'])->name('news');
 Route::get('/news/{id}', [FrontendController::class, 'newsShow'])->name('news.show');
 
-Route::post('comment/{postId}', [CommentController::class, 'store'])->name('comment.store');
+Route::post('comment/{blogId}/{type}/{id?}', [CommentController::class, 'store'])->name('comment.store');

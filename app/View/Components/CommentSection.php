@@ -7,16 +7,20 @@ use App\Models\Comment;
 
 class CommentSection extends Component
 {
-    public $postId;
+    public $blogId;
+    public $type;
+    public $comment;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($postId)
+    public function __construct($blogId, $type, $comment = null)
     {
-        $this->postId = $postId;
+        $this->blogId = $blogId;
+        $this->type = $type;
+        $this->comment = $comment;
     }
 
     /**
@@ -36,7 +40,13 @@ class CommentSection extends Component
             }
             return $result;
         };
-        $comments = Comment::where('post_id', $this->postId)->whereNull('parent_id')->with('children')->orderBy('created_at', 'desc')->get();
+        $comments = Comment::whereNull('parent_id')->with('children')->orderBy('created_at', 'desc');
+        if($this->type == 'post') {
+            $comments = $comments->where('post_id', $this->blogId);
+        } else {
+            $comments = $comments->where('news_id', $this->blogId);
+        }
+        $comments = $comments->get();
         $ordered_comments = [];
         foreach($comments as $comment) {
             $ordered_comments[] = $comment;

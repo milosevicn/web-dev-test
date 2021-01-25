@@ -39,7 +39,7 @@
                 <p>{!! nl2br(e($post->content)) !!}</p>
             </div>
         </div>
-        <x-comment-section :postId="$post->id" />
+        <x-comment-section :blogId="$post->id" type="post" />
     </div>
     
 </x-guest-layout>

@@ -30,31 +30,16 @@ class CommentSection extends Component
      */
     public function render()
     {
-        $comment_children = function($comments) use (&$comment_children) {
-            $result = [];
-            foreach($comments->children as $child) {
-                $result[] = $child;
-                if($child->children) {
-                    $result = array_merge($result, $comment_children($child));
-                }
-            }
-            return $result;
-        };
         $comments = Comment::where('approved', 1)->whereNull('parent_id')->with('children')->orderBy('created_at', 'desc');
         if($this->type == 'post') {
             $comments = $comments->where('post_id', $this->blogId);
         } else {
             $comments = $comments->where('news_id', $this->blogId);
         }
-        $comments = $comments->get();
-        $ordered_comments = [];
-        foreach($comments as $comment) {
-            $ordered_comments[] = $comment;
-            $ordered_comments = array_merge($ordered_comments, $comment_children($comment));
-        }
+        $comments = $comments->paginate(2);
 
         return view('components.comment-section', [
-          'comments' => $ordered_comments,
+          'comments' => $comments,
         ]);
     }
 }

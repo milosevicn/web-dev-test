@@ -75,7 +75,6 @@
     @if (!empty($comments) && !isset($comment))
     <div class="my-3 p-3 bg-white rounded shadow-sm">
         <h3 class="border-bottom pb-2 mb-0">Comments:</h3>
-
         @foreach ($comments as $comment)
             <div class="d-flex text-muted pt-3">
                 <div :class="{ 'pl-10': '{{ $comment->parent_id }}' }">
@@ -83,12 +82,13 @@
                         <strong class="text-gray-dark">{{ $comment->name }} wrote:</strong>
                         <a @click.prevent="reply_text = 'Reply to {{ $comment->name }}\'s comment', parent_comment_id = {{ $comment->id }}" href="#" class="float-right text-base font-semibold text-indigo-600 hover:text-indigo-500">Reply</a>
                     </div>
-                    @if ($comment->parent_id)
-                        @<span class="d-block italic">{{ $comment->parent_name }}</span>
-                    @endif
                     {{ $comment->comment }}
+                    @if(count($comment->children))
+                        @include('comments.partials.comment-tree',['comments' => $comment->children])
+                    @endif 
                 </div>
             </div>
         @endforeach
+        {{ $comments->links() }}
     @endif
 </div>
